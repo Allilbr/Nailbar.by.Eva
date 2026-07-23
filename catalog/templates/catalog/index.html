@@ -1,0 +1,421 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nails</title>
+    <link rel="stylesheet" href="{% static 'catalog/css/style.css' %}">
+</head>
+<body>
+ <header class="header">
+    
+       <div class="burger-btn" id="burgerBtn">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <nav class="nav-menu" id="navMenu">
+        <a href="#descr">About me</a>
+        <a href="#loadMoreBtn">My works</a>
+        <a href="#price">Price list</a>
+        <a href="#faq">Answer to frequently asked question</a>
+        <a href="#contacts">Contacts</a>
+        <a href="#booking">Apointment</a>
+        <a href="#reviews">Reviews</a>
+    </nav>
+ </header>
+
+ <main class="main-content">
+    <section class="about-section">
+
+        <div class="about-hero">
+            <h1 class="about-title">ABOUT ME</h1>
+            <h3 class="about-section">Я - Ева</h3>
+        </div>
+
+                  <div class="about-avatar-wrapper">
+            <img src="{% static 'catalog/images/Eva.jpeg' %}" alt="Eva" class="about-avatar">
+                <a href="#descr" class="intro-btn"> ПОЗНАКОМИТЬСЯ </a>
+        </div>
+            
+        <div id="descr" class="about-discription-block">
+            <div class="about-descr">
+                <p>
+Почему мне доверяют? Потому что я отношусь к маникюру не как к услуге, а как к искусству,<mark class="pink-marker"> где здоровье ногтей важнее цвета лака.</mark></p>
+                <p>У меня всегда идеальная чистота. Это не просто слово. В моём кабинете работает стерилизатор сухого жара (температура 180°C), УФ-камера для хранения инструментов и одноразовые пилочки. Я меняю перчатки перед каждым клиентом, а поверхность стола обрабатываю антисептиком после каждой записи.</p>
+            </div>
+        </div>
+    </section>
+ </main>
+
+ <section id="works" class="works-section">
+    <h2 class="section-title">MY WORKS</h2>
+
+    <div class="works-gallery">
+        <div class="work-item main-work">
+            <img src="{% static 'catalog/images/example5.jpeg' %}" alt="Маникюр главная">
+        </div>
+
+        <div id="moreWorks" class="hidden-works">
+            <div class="work-item">
+                <img src="{% static 'catalog/images/example1.jpeg' %}" alt="Маникюр 2">
+            </div>
+            <div class="work-item">
+                <img src="{% static 'catalog/images/example2.jpeg' %}" alt="Маникюр 3">
+            </div>
+            <div class="work-item">
+                <img src="{% static 'catalog/images/example3.jpeg' %}" alt="Маникюр 4">
+            </div>
+              <div class="work-item">
+                <img src="{% static 'catalog/images/example4.jpeg' %}" alt="Маникюр 5">
+            </div>
+              <div class="work-item">
+               <img src="{% static 'catalog/images/example6.jpeg' %}" alt="Маникюр 6">
+            </div>
+        </div>
+    </div>
+
+    <button id="loadMoreBtn" class="more-btn">ПОКАЗАТЬ БОЛЬШЕ</button>
+
+    <img src="{% static 'catalog/images/cat.png' %}" alt="cat" class="corner-cat">
+
+ </section>
+
+ <div class="works-gallery">
+    {% for work in works %}
+        <div class="work-item">
+            <img src="{{ work.image.url }}" alt="{{ work.title }}">
+        </div>
+    {% endfor %}
+</div>
+
+<section id="price" class="price-section">
+    <h2 class="section-title">PRICE LIST</h2>
+
+    <div class="price-calculator">
+        {% for service in services %}
+            <div class="price-item">
+                <label class="price-checkbox-label">
+                    <input type="checkbox" class="price-check" data-price="{{ service.price }}" data-name="{{ service.name }}">
+                    <span class="service-name">{{ service.name }}</span>
+                </label>
+                <span class="price-tag">{{ service.price }} ₸</span>
+            </div>
+        {% endfor %}
+
+        <div class="summary-box">
+            <span class="summary-label">SUMMARY:</span>
+            <span id="totalPrice" class="summary-total">0 ₸</span>
+        </div>
+    </div>
+</section>
+
+
+<section id="booking" class="booking-section">
+    <h2 class="section-title-again">ОНЛАЙН ЗАПИСЬ</h2>
+
+    <div class="booking-container">
+        <div class="booking-step">
+            <h3>1. Выберите дату</h3>
+            <input type="date" id="bookingDate" class="date-picker-input">
+        </div>
+
+        <div class="booking-step" id="timeStep" style="display: none;">
+            <h3>2. Выберите время</h3>
+            <div class="time-slots-grid" id="timeSlotsGrid">
+            </div>
+        </div>
+
+
+        <div class="booking-step" id="clientStep" style="display: none;">
+            <h3>3. Ваши данные</h3>
+            <form id="bookingForm" class="booking-form">
+                <input type="text" id="clientName" placeholder="Ваше имя" required class="booking-input">
+                <input type="tel" id="clientPhone" placeholder="Ваш телефон (+7...)" required class="booking-input">
+                <button type="submit" class="booking-submit-btn">ЗАПИСАТЬСЯ</button>
+            </form>
+        </div>
+    </div>
+</section>
+<script>
+    const occupiedSlots = JSON.parse('{{ occupied_slots_json|escapejs }}');
+</script>
+
+
+<section id="faq" class="faq-section">
+    <h2 class="section-title">ЧАСТЫЕ ВОПРОСЫ</h2>
+
+  
+    <div class="faq-category">
+        <h3 class="faq-category-title"> Стойкость и сроки носки</h3>
+        <div class="faq-grid">
+            <div class="faq-card">
+                <div class="faq-q">Почему маникюр отслоился через неделю?</div>
+                <div class="faq-short-a">Стойкость зависит от ухода и особенностей ногтей (обычно 3–4 недели).</div>
+                <button class="faq-btn" 
+                        data-question="Почему маникюр отслоился через неделю, хотя вы говорили, что он держится 3 недели?" 
+                        data-answer="«Стойкость зависит не только от моих рук, но и от ваших. В идеале покрытие стоит 3–4 недели, но если вы часто моете посуду без перчаток, работаете с химией или имеете тонкие гибкие ногти — срок сокращается. Однако я гарантирую, что в течение 3 дней после приема вы можете прийти на бесплатную коррекцию, если отслойка возникла по моей технической ошибке (плохо запечатала торец)».">
+                    УЗНАТЬ БОЛЬШЕ
+                </button>
+            </div>
+
+            <div class="faq-card">
+                <div class="faq-q">Можно ли доносить маникюр дольше 4 недель?</div>
+                <div class="faq-short-a">Категорически нет, это приводит к поломке ногтя и травмам.</div>
+                <button class="faq-btn" 
+                        data-question="Можно ли доносить маникюр дольше 4 недель, чтобы сэкономить?" 
+                        data-answer="«Категорически нет. Центр тяжести смещается, и даже небольшой рычаг может травмировать ногтевую пластину. Чем длиннее отросший край, тем выше риск поломать свой ноготь до мяса. Максимальный срок носки базы — 4 недели, дальше это неэкономия, а лечение».">
+                    УЗНАТЬ БОЛЬШЕ
+                </button>
+            </div>
+        </div>
+    </div>
+
+ 
+    <div class="faq-category">
+        <h3 class="faq-category-title">Боль и дискомфорт</h3>
+        <div class="faq-grid">
+            <div class="faq-card">
+                <div class="faq-q">Мне больно во время обработки, это нормально?</div>
+                <div class="faq-short-a">Нет, боль — это сигнал. Сразу скажите мастеру!</div>
+                <button class="faq-btn" 
+                        data-question="Мне больно во время обработки кутикулы, это нормально?" 
+                        data-answer="«Нет, боль — это сигнал. Скажите мне об этом сразу. Я работаю тонкими фрезами и могу снизить обороты или сменить насадку. Если вы чувствуете жжение во время сушки в лампе — это полимеризационная теплоотдача. Выньте руку на пару секунд, опустите вниз и засуньте обратно, так проходит острая боль».">
+                    УЗНАТЬ БОЛЬШЕ
+                </button>
+            </div>
+
+            <div class="faq-card">
+                <div class="faq-q">После снятия ногти стали тонкими и «печами»?</div>
+                <div class="faq-short-a">Бережное снятие сохраняет кератиновый слой, но истонченным ногтям нужно укрепление.</div>
+                <button class="faq-btn" 
+                        data-question="После снятия гель-лака ногти стали тонкими и 'печами'. Это вы испортили?" 
+                        data-answer="«Сама пластина не имеет нервов, она не болит. Боль возникает от перепиливания кератинового слоя. Я снимаю покрытие щадящим способом (спилом или размачиванием), оставляя тонкий слой базы для защиты. Тонкость после другого мастера — следствие агрессивного снятия. Восстановить структуру нельзя, только отрастить, но я нанесу укрепляющую базу, чтобы защитить ломкие ногти».">
+                    УЗНАТЬ БОЛЬШЕ
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="faq-category">
+        <h3 class="faq-category-title"> Дизайн и цвет</h3>
+        <div class="faq-grid">
+            <div class="faq-card">
+                <div class="faq-q">Я хочу точь-в-точь как на картинке, вы сможете?</div>
+                <div class="faq-short-a">Сделаю качественную стилизацию с учетом формы ваших ногтей.</div>
+                <button class="faq-btn" 
+                        data-question="Я хочу точь-в-точь как на картинке, вы сможете?" 
+                        data-answer="«Я сделаю стилизацию. На 95% совпадение возможно только если это принт-наклейка. Ручная роспись или градиент всегда уникальны. Я повторю цвет и идею, но из-за формы вашего ногтя рисунок может лечь иначе. Давайте посмотрим варианты, которые точно украсят вашу руку».">
+                    УЗНАТЬ БОЛЬШЕ
+                </button>
+            </div>
+
+            <div class="faq-card">
+                <div class="faq-q">Белый гель-лак желтеет со временем?</div>
+                <div class="faq-short-a">Качественный гель-лак с топом UV-фильтром не желтеет.</div>
+                <button class="faq-btn" 
+                        data-question="Белый гель-лак желтеет?" 
+                        data-answer="«Качественный белый не желтеет. Пожелтение происходит из-за реакции пигмента с УФ-лампами старого поколения (плохая сушка) или взаимодействия с никотином/куркумой. Я использую топ с УФ-фильтром, который предотвращает пожелтение».">
+                    УЗНАТЬ БОЛЬШЕ
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="faq-category">
+        <h3 class="faq-category-title"> Здоровье и аллергии</h3>
+        <div class="faq-grid">
+            <div class="faq-card">
+                <div class="faq-q">У меня аллергия на гель-лак, что делать?</div>
+                <div class="faq-short-a">Используем гипоаллергенные HEMA-free материалы и делаем тест.</div>
+                <button class="faq-btn" 
+                        data-question="У меня аллергия на гель-лак, что делать?" 
+                        data-answer="«Вероятно, у вас реакция на компонент HEMA (гидроксиэтилметакрилат). У меня есть линейка HEMA-free (гипоаллергенные базы и топы). Запишитесь на пробный маникюр на один ноготь — мы сделаем тест-полоску, и если через сутки покраснения не будет, работаем смело».">
+                    УЗНАТЬ БОЛЬШЕ
+                </button>
+            </div>
+
+            <div class="faq-card">
+                <div class="faq-q">Можно ли делать маникюр при грибке?</div>
+                <div class="faq-short-a">Нет, сначала требуется лечение у врача-дерматолога.</div>
+                <button class="faq-btn" 
+                        data-question="Можно ли делать маникюр при грибке (онихомикозе)?" 
+                        data-answer="«Нет, это врачебная зона. Я не имею права работать с пораженными ногтями, чтобы не распространять инфекцию на соседние пальцы и не занести споры в инструменты. Идите к дерматологу, пролечитесь, и с чистыми ногтями — приходите. Мои инструменты проходят стерилизацию в сухожаре, но грибок - это риск для вас».">
+                    УЗНАТЬ БОЛЬШЕ
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="faq-category">
+        <h3 class="faq-category-title"> Процесс и материалы</h3>
+        <div class="faq-grid">
+            <div class="faq-card">
+                <div class="faq-q">Зачем нужна база, если можно сразу цвет?</div>
+                <div class="faq-short-a">База обеспечивает сцепление и защищает ноготь от пигмента.</div>
+                <button class="faq-btn" 
+                        data-question="Зачем нужна база, если можно сразу нанести цвет?" 
+                        data-answer="«База — это как праймер для лица. Она создает шероховатость для сцепления (адгезии) и защищает ваш ноготь от въедания пигмента. Если нанести цвет без базы, он отслоится уже на 3-й день».">
+                    УЗНАТЬ БОЛЬШЕ
+                </button>
+            </div>
+
+            <div class="faq-card">
+                <div class="faq-q">Почему кутикулу не обрезают, а отодвигают?</div>
+                <div class="faq-short-a">Аппаратный маникюр безопаснее, кутикула шлифуется без порезов.</div>
+                <button class="faq-btn" 
+                        data-question="Почему вы не обрезаете кутикулу, а только отодвигаете?" 
+                        data-answer="«Я использую аппаратный европейский маникюр (без обрезания). Кутикула — это естественный барьер. Я не режу её, а шлифую, чтобы не было заусенцев. Рука остается ухоженной дольше, и нет риска порезов и заражения».">
+                    УЗНАТЬ БОЛЬШЕ
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="faq-category">
+        <h3 class="faq-category-title"> Организационные моменты</h3>
+        <div class="faq-grid">
+            <div class="faq-card">
+                <div class="faq-q">Я опаздываю на 15 минут, мы успеем?</div>
+                <div class="faq-short-a">Сделаем упрощенный дизайн или перенесем время.</div>
+                <button class="faq-btn" 
+                        data-question="Я опаздываю на 15 минут, мы успеем?" 
+                        data-answer="«Если я вижу, что опоздание критично, я предложу сделать упрощенный дизайн (без рисунка) или перенесу запись, чтобы не делать «галопом». Я не жертвую качеством сушки и обработки ради скорости».">
+                    УЗНАТЬ БОЛЬШЕ
+                </button>
+            </div>
+
+            <div class="faq-card">
+                <div class="faq-q">Почему стоимость выше, чем в соседних салонах?</div>
+                <div class="faq-short-a">Премиальные материалы, стерильность и регулярное обучение.</div>
+                <button class="faq-btn" 
+                        data-question="Почему у вас стоимость выше, чем в соседнем салоне?" 
+                        data-answer="«Потому что в цену заложены: 1. Одноразовые расходники (пилочки, бахилы, салфетки) — я не экономлю на гигиене. 2. Я прохожу повышение квалификации раз в полгода. 3. Премиальные материалы (Kodi, Luxio, TNL), которые не вызывают аллергию и дают глянцевый блеск 4 недели».">
+                    УЗНАТЬ БОЛЬШЕ
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<div id="faqModal" class="faq-modal">
+    <div class="faq-modal-content">
+        <button id="closeFaqBtn" class="faq-close-btn">&times;</button>
+        <div class="faq-chat-header"> Ответ мастера</div>
+        <div class="faq-chat-body">
+     
+            <div class="chat-msg msg-question">
+                <span id="modalQuestion">Вопрос</span>
+            </div>
+
+            <div class="chat-msg msg-answer">
+                <span id="modalAnswer">Ответ</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section id="contacts" class="contacts-section">
+    <h2 class="contacts-title">CONTACT</h2>
+
+    <div class="contacts-wrapper">
+      
+        <div class="avatar-circle">
+            <img src="{% static 'catalog/images/avatar.jpeg' %}" alt="Ева Мастер" class="avatar-img">
+        </div>
+
+   
+        <div class="social-buttons">
+           
+            <a href="https://www.instagram.com/nailbar.by.eva?igsh=MWlpMG51NHhmMWJ5cQ==" target="_blank" class="contact-btn instagram-btn">
+                INSTAGRAM
+            </a>
+
+       
+            <button id="tgBtn" class="contact-btn telegram-btn">
+                TELEGRAM
+            </button>
+        </div>
+    </div>
+
+
+    <div class="phone-block">
+        <div class="phone-title">MY NUMBER</div>
+        <a href="tel:+77000000000" class="phone-number">+7 (775) 260 86 30</a>
+    </div>
+</section>
+
+
+<div id="tgModal" class="tg-modal">
+    <div class="tg-modal-content">
+        <button id="closeTgBtn" class="tg-close-btn">&times;</button>
+        <h3>TELEGRAM</h3>
+        <p>Мой юзернейм в Telegram:</p>
+        <div class="tg-username">@Cuteest9</div>
+        <a href="https://t.me/eva_nails" target="_blank" class="tg-link-btn">Перейти в чат</a>
+    </div>
+</div>
+
+
+<section id="reviews" class="reviews-section">
+    <h2 class="section-title">ОТЗЫВЫ КЛИЕНТОВ</h2>
+
+    <div class="reviews-grid">
+        {% for review in reviews %}
+            <div class="review-card">
+                <div class="review-header">
+                    <span class="review-author">{{ review.name }}</span>
+                    <span class="review-stars">
+                        {% if review.rating == 5 %}★★★★★{% elif review.rating == 4 %}★★★★☆{% else %}★★★☆☆{% endif %}
+                    </span>
+                </div>
+                <p class="review-text">{{ review.text }}</p>
+                
+                {% if review.photo %}
+                    <div class="review-photo-wrapper">
+                        <img src="{{ review.photo.url }}" alt="Фото от клиента" class="review-photo">
+                    </div>
+                {% endif %}
+                
+                <span class="review-date">{{ review.created_at|date:"d.m.Y" }}</span>
+            </div>
+        {% empty %}
+            <p class="no-reviews">Пока нет отзывов. Будьте первыми!</p>
+        {% endfor %}
+    </div>
+
+    
+    <div class="add-review-box">
+        <h3>Оставить отзыв</h3>
+        <form action="{% url 'add_review' %}" method="POST" enctype="multipart/form-data" class="review-form">
+            {% csrf_token %}
+            <input type="text" name="name" placeholder="Ваше имя" required class="review-input">
+            
+            <select name="rating" class="review-input">
+                <option value="5">Оценка: 5 ★★★★★</option>
+                <option value="4">Оценка: 4 ★★★★☆</option>
+                <option value="3">Оценка: 3 ★★★☆☆</option>
+            </select>
+
+            <textarea name="text" placeholder="Ваш отзыв..." required class="review-textarea"></textarea>
+            
+            <label class="file-upload-label">
+                Прикрепить фото работы
+                <input type="file" name="photo" accept="image/*" class="file-input">
+            </label>
+
+            <button type="submit" class="review-submit-btn">ОТПРАВИТЬ ОТЗЫВ</button>
+        </form>
+    </div>
+</section>
+
+ <script src="{% static 'catalog/js/script.js' %}"></script>
+</body>
+</html>
