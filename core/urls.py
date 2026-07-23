@@ -21,13 +21,10 @@ from catalog.views import home_page
 urlpatterns = [
     path('admin/', admin.site.urls),  
     path('', home_page, name='home'),
+      path('', views.home_page, name='home'),
+        path('api/booking/', views.create_booking, name='create_booking'),
+        path('add-review/', views.add_review, name='add_review'), 
 ]
 
 from django.urls import path
 from catalog import views
-
-urlpatterns = [
-    path('', views.home_page, name='home'),
-    path('api/booking/', views.create_booking, name='create_booking'),
-    path('add-review/', views.add_review, name='add_review'), # <--- Новый путь!
-]
