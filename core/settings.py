@@ -121,9 +121,11 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [ BASE_DIR/ "static"]
 
 DEBUG = False
-ALLOWED_HOSTS = ['*']  
+ALLOWED_HOSTS = ['nailbar-by-eva.onrender.com', 'localhost', '127.0.0.1', '*']
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 APPEND_SLASH = True
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
